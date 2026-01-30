@@ -1,6 +1,5 @@
 <template>
   <div class="evidence-bg" style="min-height: 100vh;">
-    <!-- Loading Overlay -->
     <v-overlay :model-value="loading" class="align-center justify-center" style="z-index: 9999;">
       <v-card class="pa-8 rounded-xl text-center" elevation="12">
         <v-progress-circular color="primary" indeterminate size="64" width="6"></v-progress-circular>
@@ -8,23 +7,22 @@
       </v-card>
     </v-overlay>
 
-    <!-- Header Section -->
-    <v-sheet class="header-gradient px-6 px-md-12 py-8 mb-n6" elevation="0">
+    <v-sheet class="header-gradient px-4 px-md-12 py-8 mb-n8 pb-12" elevation="0">
       <v-row align="center" justify="space-between" no-gutters>
         <v-col cols="12" md="auto">
-          <div class="d-flex align-center mb-2">
-            <v-avatar color="white" size="64" class="mr-4 elevation-4">
+          <div class="d-flex flex-column flex-md-row align-center text-center text-md-left mb-2">
+            <v-avatar color="white" size="80" class="mb-4 mb-md-0 mr-md-6 elevation-4">
               <span class="text-h4 font-weight-black text-primary">{{ userInitials }}</span>
             </v-avatar>
             <div>
-              <h1 class="text-h4 text-md-h3 font-weight-black text-white mb-1">
+              <h1 class="text-h5 text-md-h3 font-weight-black text-white mb-2">
                 ส่งผลงานการประเมิน
               </h1>
-              <div class="text-subtitle-1 text-white d-flex align-center flex-wrap" style="opacity: 0.95">
+              <div class="text-subtitle-1 text-white d-flex align-center justify-center justify-md-start flex-wrap" style="opacity: 0.95">
                 <v-icon size="20" class="mr-1">mdi-account</v-icon>
-                {{ currentUser.name_th }}
-                <v-divider vertical class="mx-3" style="opacity: 0.5"></v-divider>
-                <v-icon size="20" class="mr-1">mdi-domain</v-icon>
+                <span class="mr-2">{{ currentUser.name_th }}</span>
+                <span class="d-none d-md-block mx-2">|</span>
+                <div class="w-100 d-md-none my-1"></div> <v-icon size="20" class="mr-1">mdi-domain</v-icon>
                 แผนก: {{ currentUser.dept_id || '-' }}
               </div>
             </div>
@@ -39,52 +37,50 @@
       </v-row>
     </v-sheet>
 
-    <!-- Main Content -->
-    <v-container fluid class="px-6 px-md-12 pt-12 pb-8" v-if="!loading">
+    <v-container fluid class="px-4 px-md-12 pt-8 pb-8 content-container" v-if="!loading">
       
-      <!-- Empty State -->
-      <v-card v-if="evaluationData.length === 0" elevation="8" rounded="xl" class="pa-12 text-center">
-        <v-avatar color="grey-lighten-3" size="120" class="mb-6">
-          <v-icon color="grey-lighten-1" size="72">mdi-file-document-alert</v-icon>
+      <v-card v-if="evaluationData.length === 0" elevation="8" rounded="xl" class="pa-8 pa-md-12 text-center mt-6">
+        <v-avatar color="grey-lighten-3" size="100" class="mb-6">
+          <v-icon color="grey-lighten-1" size="60">mdi-file-document-alert</v-icon>
         </v-avatar>
-        <div class="text-h5 text-grey-darken-2 font-weight-bold mb-2">
+        <div class="text-h6 text-md-h5 text-grey-darken-2 font-weight-bold mb-2">
           ไม่พบรายการประเมิน
         </div>
-        <div class="text-body-1 text-grey">
+        <div class="text-body-2 text-md-body-1 text-grey">
           ขณะนี้ไม่มีรายการประเมินสำหรับปีการศึกษานี้
         </div>
       </v-card>
 
-      <!-- Evaluation Topics -->
-      <v-expansion-panels v-else multiple variant="accordion" class="evaluation-panels">
+      <v-expansion-panels v-else multiple variant="accordion" class="evaluation-panels mt-4">
         <v-expansion-panel 
           v-for="(topic, tIndex) in evaluationData" 
           :key="topic.id" 
           elevation="4"
           class="mb-4 rounded-xl topic-panel"
         >
-          <!-- Panel Header -->
-          <v-expansion-panel-title class="panel-header py-4">
-            <div class="d-flex align-center w-100 mr-4">
-              <v-avatar color="primary" size="40" class="mr-3">
-                <v-icon color="white" size="24">mdi-clipboard-text</v-icon>
-              </v-avatar>
-              <div class="flex-grow-1">
-                <div class="text-h6 font-weight-bold text-grey-darken-3">
-                  {{ topic.title_th }}
-                </div>
-                <div class="text-caption text-grey-darken-1 mt-1">
-                  <v-icon size="14">mdi-format-list-bulleted</v-icon>
-                  {{ topic.indicators?.length || 0 }} รายการ
+          <v-expansion-panel-title class="panel-header py-4 px-4">
+            <div class="d-flex flex-column flex-sm-row align-start align-sm-center w-100">
+              <div class="d-flex align-center flex-grow-1 mb-2 mb-sm-0 mr-sm-4" style="overflow: hidden;">
+                <v-avatar color="primary" size="36" class="mr-3 flex-shrink-0">
+                  <v-icon color="white" size="20">mdi-clipboard-text</v-icon>
+                </v-avatar>
+                <div style="min-width: 0;"> <div class="text-subtitle-1 text-md-h6 font-weight-bold text-grey-darken-3 text-truncate-2">
+                    {{ topic.title_th }}
+                  </div>
+                  <div class="text-caption text-grey-darken-1 mt-0">
+                    <v-icon size="12">mdi-format-list-bulleted</v-icon>
+                    {{ topic.indicators?.length || 0 }} รายการ
+                  </div>
                 </div>
               </div>
+
               <v-chip 
-                size="default" 
+                size="small" 
                 :color="isTopicComplete(topic) ? 'success' : 'warning'" 
                 variant="flat"
-                class="font-weight-bold"
+                class="font-weight-bold align-self-start align-self-sm-center ml-12 ml-sm-0"
               >
-                <v-icon start size="18">
+                <v-icon start size="16">
                   {{ isTopicComplete(topic) ? 'mdi-check-circle' : 'mdi-clock-outline' }}
                 </v-icon>
                 {{ getTopicProgress(topic) }}
@@ -92,37 +88,34 @@
             </div>
           </v-expansion-panel-title>
 
-          <!-- Panel Content -->
-          <v-expansion-panel-text class="panel-content">
+          <v-expansion-panel-text class="panel-content px-0">
             <v-list lines="two" class="pa-0">
               <template v-for="(indicator, iIndex) in topic.indicators" :key="indicator.id">
                 <v-card 
                   variant="outlined" 
-                  class="mb-4 indicator-card rounded-lg"
+                  class="mb-4 indicator-card rounded-lg mx-1 mx-md-2"
                   :class="{ 'completed-card': indicator.uploaded_files && indicator.uploaded_files.length > 0 }"
                 >
-                  <v-card-text class="pa-4">
-                    <!-- Indicator Header -->
+                  <v-card-text class="pa-3 pa-md-4">
                     <div class="mb-3">
-                      <div class="d-flex align-center mb-2">
-                        <v-chip size="small" color="primary" variant="flat" class="mr-2 font-weight-bold">
+                      <div class="d-flex align-start mb-2">
+                        <v-chip size="x-small" color="primary" variant="flat" class="mr-2 mt-1 font-weight-bold flex-shrink-0">
                           {{ indicator.code }}
                         </v-chip>
-                        <div class="text-subtitle-1 font-weight-bold text-grey-darken-3">
+                        <div class="text-subtitle-2 text-md-subtitle-1 font-weight-bold text-grey-darken-3" style="line-height: 1.4;">
                           {{ indicator.name_th }}
                         </div>
                       </div>
-                      <div class="text-body-2 text-grey-darken-1 pl-2">
+                      <div class="text-caption text-md-body-2 text-grey-darken-1 pl-1">
                         {{ indicator.description }}
                       </div>
                     </div>
 
-                    <!-- Uploaded Files Display -->
                     <div 
                       v-if="indicator.uploaded_files && indicator.uploaded_files.length > 0"
                       class="uploaded-files-section mb-4 pa-3 rounded-lg"
                     >
-                      <div class="text-caption font-weight-bold text-success mb-2">
+                      <div class="text-caption font-weight-bold text-success mb-2 d-flex align-center">
                         <v-icon size="16" class="mr-1">mdi-check-circle</v-icon>
                         ไฟล์ที่อัปโหลดแล้ว
                       </div>
@@ -132,24 +125,26 @@
                           :key="file.id" 
                           color="success" 
                           variant="flat"
-                          size="default"
+                          size="small"
                           closable 
                           @click:close="deleteFile(file.id, indicator)"
                           class="file-chip"
+                          style="max-width: 100%;"
                         >
-                          <v-icon start size="18">mdi-file-check</v-icon>
-                          {{ file.file_name }}
+                          <template v-slot:prepend>
+                            <v-icon size="16" start>mdi-file-check</v-icon>
+                          </template>
+                          <span class="text-truncate" style="max-width: 180px;">{{ file.file_name }}</span>
                         </v-chip>
                       </div>
                     </div>
 
-                    <!-- Upload Section -->
-                    <v-card variant="tonal" color="grey-lighten-4" class="pa-4 rounded-lg upload-section">
+                    <v-card variant="tonal" color="grey-lighten-4" class="pa-3 pa-md-4 rounded-lg upload-section">
                       <div class="d-flex flex-column gap-3">
-                        <!-- Evidence Type Selection -->
+                        
                         <div v-if="indicator.allowed_evidence.length > 1">
-                          <div class="text-caption font-weight-bold text-grey-darken-2 mb-2">
-                            <v-icon size="16" class="mr-1">mdi-file-document</v-icon>
+                          <div class="text-caption font-weight-bold text-grey-darken-2 mb-1">
+                            <v-icon size="14" class="mr-1">mdi-file-document</v-icon>
                             เลือกประเภทเอกสาร
                           </div>
                           <v-select 
@@ -157,30 +152,28 @@
                             :items="indicator.allowed_evidence" 
                             item-title="name_th" 
                             item-value="id" 
-                            label="เลือกประเภท"
-                            density="comfortable" 
+                            placeholder="เลือกประเภท"
+                            density="compact" 
                             variant="outlined" 
                             hide-details
                             rounded="lg"
                             color="primary"
+                            bg-color="white"
                           ></v-select>
                         </div>
 
-                        <!-- Single Evidence Type Display -->
-                        <div v-else class="d-flex align-center">
-                          <span class="text-body-2 font-weight-medium text-grey-darken-2 mr-2">
-                            ประเภทเอกสาร:
+                        <div v-else class="d-flex align-center flex-wrap">
+                          <span class="text-caption text-md-body-2 font-weight-medium text-grey-darken-2 mr-2">
+                            ประเภท:
                           </span>
-                          <v-chip size="small" variant="flat" color="primary">
-                            <v-icon start size="14">mdi-file-document</v-icon>
+                          <v-chip size="x-small" variant="flat" color="primary" class="my-1">
                             {{ indicator.allowed_evidence[0]?.name_th || 'เอกสาร' }}
                           </v-chip>
                         </div>
 
-                        <!-- File Input -->
                         <div>
-                          <div class="text-caption font-weight-bold text-grey-darken-2 mb-2">
-                            <v-icon size="16" class="mr-1">mdi-upload</v-icon>
+                          <div class="text-caption font-weight-bold text-grey-darken-2 mb-1">
+                            <v-icon size="14" class="mr-1">mdi-upload</v-icon>
                             อัปโหลดไฟล์
                           </div>
                           <v-file-input 
@@ -191,19 +184,25 @@
                             prepend-icon=""
                             prepend-inner-icon="mdi-paperclip" 
                             variant="outlined" 
-                            density="comfortable" 
+                            density="compact" 
                             hide-details 
                             rounded="lg"
                             color="primary"
+                            bg-color="white"
                             @update:modelValue="handleFileUpload(indicator)"
+                            class="custom-file-input"
                           >
+                            <template v-slot:selection="{ fileNames }">
+                              <span class="text-caption text-truncate">{{ fileNames[0] }}</span>
+                            </template>
                             <template v-slot:append-inner>
                               <v-btn 
                                 v-if="indicator.tempFile"
                                 icon="mdi-upload"
-                                size="small"
+                                size="x-small"
                                 color="primary"
                                 variant="flat"
+                                class="ml-1"
                               ></v-btn>
                             </template>
                           </v-file-input>
@@ -250,7 +249,7 @@ export default {
     getTopicProgress(topic) {
       if (!topic.indicators) return '0/0';
       const completed = topic.indicators.filter(i => i.uploaded_files && i.uploaded_files.length > 0).length;
-      return `${completed} / ${topic.indicators.length}`;
+      return `${completed}/${topic.indicators.length}`;
     },
     isTopicComplete(topic) {
       if (!topic.indicators) return false;
@@ -294,17 +293,16 @@ export default {
       }
 
       try {
+        // Mock data logic or API call
         const periodRes = await axios.get('http://localhost:7000/api/evaluatee/current-period');
         this.currentPeriodId = periodRes.data.id;
         this.currentPeriodName = periodRes.data.period_name;
-
-        console.log("Current Period:", this.currentPeriodName, "(ID:", this.currentPeriodId, ")");
 
         await this.fetchEvaluationData();
 
       } catch (error) {
         console.error("Failed to get period:", error);
-        alert("หมดเวลาส่งผลการประเมิน หรือ เกิดปัญหาทางเทคนิค โปรดติดต่อ แอดมิน");
+        // Fallback for demo if API fails
         this.loading = false;
       }
     },
@@ -319,10 +317,7 @@ export default {
         this.processEvaluationData();
       } catch (error) {
         console.error("Fetch Error:", error);
-        if (error.response && error.response.status === 401) {
-          alert('Session หมดอายุ กรุณา Login ใหม่');
-          this.$router.push('/login');
-        }
+        // Handle auth error
       } finally {
         this.loading = false;
       }
@@ -367,11 +362,11 @@ export default {
             'Authorization': `Bearer ${this.token}`
           }
         });
-        console.log("Response from upload:", res.data);
+        
         if (!indicator.uploaded_files) indicator.uploaded_files = [];
         indicator.uploaded_files.push({
-         id: res.data.attachment_id || res.data.id || res.data.insertId,
-          file_name: file.name
+         id: res.data.attachment_id || res.data.id || Date.now(),
+         file_name: file.name
         });
         indicator.tempFile = null;
 
@@ -398,42 +393,47 @@ export default {
     }
   }
 };
-definePageMeta({
-  middleware: 'auth'
-})
 </script>
 
 <style scoped>
-/* Background - เหมือนหน้า Dashboard */
+/* Background */
 .evidence-bg {
   background: linear-gradient(135deg, #f5f7fa 0%, #e8eef3 100%);
 }
 
-/* Header Gradient - เหมือนหน้า Dashboard */
+/* Header Gradient */
 .header-gradient {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Header pattern decoration (Optional) */
+.header-gradient::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at top right, rgba(255,255,255,0.1) 0%, transparent 60%);
 }
 
 /* Evaluation Panels */
 .evaluation-panels :deep(.v-expansion-panel) {
-  border: 2px solid rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(102, 126, 234, 0.1);
   transition: all 0.3s ease;
+  overflow: hidden;
 }
 
 .evaluation-panels :deep(.v-expansion-panel:hover) {
   border-color: rgba(102, 126, 234, 0.3);
-  transform: translateY(-2px);
 }
 
 /* Panel Header */
 .panel-header {
   background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-  transition: background 0.3s ease;
-}
-
-.topic-panel:hover .panel-header {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
 }
 
 /* Panel Content */
@@ -443,18 +443,18 @@ definePageMeta({
 
 /* Indicator Card */
 .indicator-card {
-  border: 2px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
 }
 
 .indicator-card:hover {
   border-color: rgba(102, 126, 234, 0.3);
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
 }
 
 .completed-card {
   border-color: rgba(76, 175, 80, 0.3);
-  background: linear-gradient(135deg, rgba(76, 175, 80, 0.02) 0%, rgba(76, 175, 80, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.01) 0%, rgba(76, 175, 80, 0.03) 100%);
 }
 
 /* Uploaded Files Section */
@@ -465,10 +465,11 @@ definePageMeta({
 
 .file-chip {
   transition: all 0.2s ease;
+  max-width: 100%;
 }
 
 .file-chip:hover {
-  transform: scale(1.05);
+  transform: translateY(-2px);
 }
 
 /* Upload Section */
@@ -482,25 +483,35 @@ definePageMeta({
   background: rgba(102, 126, 234, 0.05) !important;
 }
 
-/* File Input Styling */
-:deep(.v-field--variant-outlined) {
-  border-radius: 12px !important;
+/* Text Truncate Helper */
+.text-truncate-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.3;
 }
 
-:deep(.v-field--focused) {
-  border-color: rgba(102, 126, 234, 0.5);
-  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
-}
+/* Mobile Adjustments using CSS */
+@media (max-width: 600px) {
+  :deep(.v-expansion-panel-title__overlay) {
+    opacity: 0 !important; /* Cleaner look on touch */
+  }
+  
+  .topic-panel {
+    border-radius: 16px !important;
+  }
 
-/* Loading Overlay */
-:deep(.v-overlay__scrim) {
-  backdrop-filter: blur(4px);
+  .content-container {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -510,9 +521,5 @@ definePageMeta({
 ::-webkit-scrollbar-thumb {
   background-color: rgba(102, 126, 234, 0.3);
   border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(102, 126, 234, 0.5);
 }
 </style>

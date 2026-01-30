@@ -1,18 +1,17 @@
 <template>
   <div class="assignments-bg" style="min-height: 100vh;">
-    <!-- Header Section -->
-    <v-sheet class="header-gradient px-6 px-md-12 py-8 mb-n6" elevation="0">
+    <v-sheet class="header-gradient px-4 px-md-12 py-6 py-md-8 mb-n6" elevation="0">
       <v-row align="center" justify="space-between" no-gutters>
         <v-col cols="12" md="auto">
           <div class="d-flex align-center mb-2">
-            <v-avatar color="white" size="56" class="mr-3 elevation-3">
-              <v-icon color="primary" size="32">mdi-account-switch</v-icon>
+            <v-avatar color="white" size="48" class="mr-3 elevation-3 d-md-flex" :class="{'size-56': $vuetify.display.mdAndUp}">
+              <v-icon color="primary" size="28" :size="$vuetify.display.mdAndUp ? 32 : 28">mdi-account-switch</v-icon>
             </v-avatar>
             <div>
-              <h1 class="text-h4 text-md-h3 font-weight-black text-white mb-1">
+              <h1 class="text-h5 text-md-h3 font-weight-black text-white mb-1">
                 จัดการการจับคู่ประเมิน
               </h1>
-              <div class="text-subtitle-1 text-white" style="opacity: 0.9">
+              <div class="text-body-2 text-md-subtitle-1 text-white" style="opacity: 0.9">
                 กำหนดคู่กรรมการและผู้รับการประเมินตามรอบปีที่ระบุ
               </div>
             </div>
@@ -21,10 +20,8 @@
       </v-row>
     </v-sheet>
 
-    <!-- Main Content -->
-    <v-container fluid class="px-6 px-md-12 pt-12 pb-8">
+    <v-container fluid class="px-4 px-md-12 pt-10 pt-md-12 pb-8">
       <v-row>
-        <!-- Left Panel: Form -->
         <v-col cols="12" lg="4">
           <v-card 
             elevation="8" 
@@ -32,18 +29,20 @@
             class="h-100 form-card"
             :class="isEditing ? 'editing-mode' : 'create-mode'"
           >
-            <v-card-item class="pa-6 form-header">
+            <v-card-item class="pa-4 pa-md-6 form-header">
               <template v-slot:prepend>
                 <v-avatar 
                   :color="isEditing ? 'warning' : 'primary'" 
-                  size="48"
+                  size="40"
+                  class="d-md-flex"
+                  :class="{'size-48': $vuetify.display.mdAndUp}"
                 >
-                  <v-icon color="white" size="28">
+                  <v-icon color="white" size="24" :size="$vuetify.display.mdAndUp ? 28 : 24">
                     {{ isEditing ? 'mdi-pencil-circle' : 'mdi-plus-circle' }}
                   </v-icon>
                 </v-avatar>
               </template>
-              <v-card-title class="text-h6 font-weight-bold">
+              <v-card-title class="text-subtitle-1 text-md-h6 font-weight-bold">
                 {{ isEditing ? 'แก้ไขข้อมูลการจับคู่' : 'สร้างการจับคู่ใหม่' }}
               </v-card-title>
               <v-card-subtitle v-if="isEditing" class="text-caption">
@@ -53,8 +52,7 @@
 
             <v-divider></v-divider>
 
-            <v-card-text class="pa-6">
-              <!-- Period Selection -->
+            <v-card-text class="pa-4 pa-md-6">
               <div class="mb-6">
                 <div class="field-label mb-3">
                   <v-icon size="18" color="primary">mdi-numeric-1-circle</v-icon>
@@ -77,7 +75,6 @@
                 ></v-select>
               </div>
 
-              <!-- Evaluator Selection -->
               <div class="mb-6">
                 <div class="field-label mb-3">
                   <v-icon size="18" color="primary">mdi-numeric-2-circle</v-icon>
@@ -102,8 +99,8 @@
                   <template v-slot:item="{ props, item }">
                     <v-list-item v-bind="props" :subtitle="item.raw.role">
                       <template v-slot:prepend>
-                        <v-avatar color="primary" size="40">
-                          <v-icon color="white" size="20">mdi-account-tie</v-icon>
+                        <v-avatar color="primary" size="32" class="mr-2">
+                          <v-icon color="white" size="16">mdi-account-tie</v-icon>
                         </v-avatar>
                       </template>
                     </v-list-item>
@@ -111,11 +108,10 @@
                 </v-autocomplete>
               </div>
 
-              <!-- Evaluatee Selection -->
               <div class="mb-8">
                 <div class="field-label mb-3">
                   <v-icon size="18" color="primary">mdi-numeric-3-circle</v-icon>
-                  ผู้รับการประเมิน (นักเรียน/บุคลากร)
+                  ผู้รับการประเมิน
                 </div>
                 <v-autocomplete
                   v-model="form.evaluatee_id"
@@ -137,8 +133,8 @@
                   <template v-slot:item="{ props, item }">
                     <v-list-item v-bind="props" :subtitle="item.raw.dept_name || 'ไม่ระบุแผนก'">
                       <template v-slot:prepend>
-                        <v-avatar color="warning" size="40">
-                          <v-icon color="white" size="20">mdi-account-school</v-icon>
+                        <v-avatar color="warning" size="32" class="mr-2">
+                          <v-icon color="white" size="16">mdi-account-school</v-icon>
                         </v-avatar>
                       </template>
                     </v-list-item>
@@ -146,11 +142,11 @@
                 </v-autocomplete>
               </div>
 
-              <!-- Submit Button -->
               <v-btn
                 block
                 :color="isEditing ? 'warning' : 'primary'"
-                size="x-large"
+                size="large"
+                :size="$vuetify.display.mdAndUp ? 'x-large' : 'large'"
                 rounded="lg"
                 elevation="4"
                 :prepend-icon="isEditing ? 'mdi-check-circle' : 'mdi-link-variant-plus'"
@@ -162,7 +158,6 @@
                 {{ isEditing ? 'ยืนยันการแก้ไข' : 'ยืนยันการจับคู่' }}
               </v-btn>
 
-              <!-- Cancel Button (Edit Mode) -->
               <v-btn
                 v-if="isEditing"
                 block
@@ -174,44 +169,46 @@
                 @click="cancelEdit"
               >
                 <v-icon start>mdi-close-circle</v-icon>
-                ยกเลิกและทำรายการใหม่
+                ยกเลิก
               </v-btn>
             </v-card-text>
           </v-card>
         </v-col>
 
-        <!-- Right Panel: Table -->
         <v-col cols="12" lg="8">
           <v-card elevation="8" rounded="xl" class="overflow-hidden" style="border: 1px solid rgba(102, 126, 234, 0.1);">
-            <!-- Toolbar -->
-            <v-toolbar flat color="white" height="80" class="px-4">
-              <v-avatar color="primary" size="40" class="mr-3">
-                <v-icon color="white" size="24">mdi-format-list-bulleted</v-icon>
-              </v-avatar>
-              <v-toolbar-title class="font-weight-bold text-h6">
-                ข้อมูลการจับคู่ทั้งหมด
-                <v-chip color="primary" size="small" class="ml-2">
-                  {{ filteredAssignments.length }}
-                </v-chip>
-              </v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-text-field
-                v-model="search"
-                prepend-inner-icon="mdi-magnify"
-                label="ค้นหาชื่อ..."
-                variant="outlined"
-                flat
-                hide-details
-                density="comfortable"
-                style="max-width: 320px;"
-                rounded="lg"
-                class="search-field"
-              ></v-text-field>
+            <v-toolbar flat color="white" class="px-4 py-2 py-md-0 h-auto" :height="$vuetify.display.mdAndUp ? 80 : 'auto'">
+              <div class="d-flex flex-wrap align-center w-100 py-3 py-md-0">
+                <div class="d-flex align-center flex-grow-1 mb-2 mb-md-0">
+                  <v-avatar color="primary" size="32" class="mr-3 d-md-flex" :class="{'size-40': $vuetify.display.mdAndUp}">
+                    <v-icon color="white" size="18" :size="$vuetify.display.mdAndUp ? 24 : 18">mdi-format-list-bulleted</v-icon>
+                  </v-avatar>
+                  <v-toolbar-title class="font-weight-bold text-subtitle-1 text-md-h6 mr-2">
+                    ข้อมูลการจับคู่
+                    <v-chip color="primary" size="x-small" :size="$vuetify.display.mdAndUp ? 'small' : 'x-small'" class="ml-1">
+                      {{ filteredAssignments.length }}
+                    </v-chip>
+                  </v-toolbar-title>
+                </div>
+                
+                <v-text-field
+                  v-model="search"
+                  prepend-inner-icon="mdi-magnify"
+                  label="ค้นหาชื่อ..."
+                  variant="outlined"
+                  flat
+                  hide-details
+                  density="compact"
+                  rounded="lg"
+                  class="search-field w-100 w-md-auto"
+                  style="min-width: 200px;"
+                  :style="$vuetify.display.mdAndUp ? 'max-width: 320px;' : ''"
+                ></v-text-field>
+              </div>
             </v-toolbar>
 
             <v-divider></v-divider>
 
-            <!-- Data Table -->
             <v-data-table
               :headers="headers"
               :items="filteredAssignments"
@@ -219,18 +216,19 @@
               density="comfortable"
               hover
               class="assignments-table"
+              :mobile-breakpoint="600"
             >
               <template v-slot:item.evaluator="{ item }">
-                <div class="d-flex align-center py-4">
-                  <v-avatar color="primary" size="48" class="mr-3 elevation-2">
-                    <v-icon color="white" size="24">mdi-account-tie</v-icon>
+                <div class="d-flex align-center py-3 py-md-4">
+                  <v-avatar color="primary" size="40" class="mr-3 elevation-2" :class="{'size-48': $vuetify.display.mdAndUp}">
+                    <v-icon color="white" size="20" :size="$vuetify.display.mdAndUp ? 24 : 20">mdi-account-tie</v-icon>
                   </v-avatar>
                   <div>
-                    <div class="text-subtitle-1 font-weight-bold text-grey-darken-3">
+                    <div class="text-body-2 text-md-subtitle-1 font-weight-bold text-grey-darken-3 text-truncate" style="max-width: 140px; md:max-width: 100%;">
                       {{ item.evaluator_name }}
                     </div>
                     <div class="text-caption text-grey-darken-1">
-                      <v-icon size="14" class="mr-1">mdi-shield-account</v-icon>
+                      <v-icon size="12" class="mr-1">mdi-shield-account</v-icon>
                       {{ item.evaluator_role }}
                     </div>
                   </div>
@@ -238,22 +236,24 @@
               </template>
 
               <template v-slot:item.arrow>
-                <v-chip color="primary" variant="tonal" size="small" class="px-2">
-                  <v-icon size="20">mdi-arrow-right-bold</v-icon>
-                </v-chip>
+                <div class="d-none d-md-flex justify-center">
+                  <v-chip color="primary" variant="tonal" size="small" class="px-2">
+                    <v-icon size="20">mdi-arrow-right-bold</v-icon>
+                  </v-chip>
+                </div>
               </template>
 
               <template v-slot:item.evaluatee="{ item }">
-                <div class="d-flex align-center py-4">
-                  <v-avatar color="warning" size="48" class="mr-3 elevation-2">
-                    <v-icon color="white" size="24">mdi-account-school</v-icon>
+                <div class="d-flex align-center py-3 py-md-4">
+                  <v-avatar color="warning" size="40" class="mr-3 elevation-2" :class="{'size-48': $vuetify.display.mdAndUp}">
+                    <v-icon color="white" size="20" :size="$vuetify.display.mdAndUp ? 24 : 20">mdi-account-school</v-icon>
                   </v-avatar>
                   <div>
-                    <div class="text-subtitle-1 font-weight-bold text-grey-darken-3">
+                    <div class="text-body-2 text-md-subtitle-1 font-weight-bold text-grey-darken-3 text-truncate" style="max-width: 140px; md:max-width: 100%;">
                       {{ item.evaluatee_name }}
                     </div>
                     <div class="text-caption text-grey-darken-1">
-                      <v-icon size="14" class="mr-1">mdi-domain</v-icon>
+                      <v-icon size="12" class="mr-1">mdi-domain</v-icon>
                       {{ item.evaluatee_dept || 'ไม่ระบุแผนก' }}
                     </div>
                   </div>
@@ -293,15 +293,15 @@
               </template>
               
               <template v-slot:no-data>
-                <div class="pa-12 text-center">
-                  <v-avatar color="grey-lighten-3" size="80" class="mb-4">
-                    <v-icon size="48" color="grey-lighten-1">mdi-account-multiple-remove</v-icon>
+                <div class="pa-8 pa-md-12 text-center">
+                  <v-avatar color="grey-lighten-3" size="60" class="mb-4" :class="{'size-80': $vuetify.display.mdAndUp}">
+                    <v-icon size="36" :size="$vuetify.display.mdAndUp ? 48 : 36" color="grey-lighten-1">mdi-account-multiple-remove</v-icon>
                   </v-avatar>
-                  <div class="text-h6 text-grey-darken-1 font-weight-medium">
+                  <div class="text-subtitle-1 text-md-h6 text-grey-darken-1 font-weight-medium">
                     ยังไม่มีข้อมูลการจับคู่
                   </div>
-                  <div class="text-body-2 text-grey mt-2">
-                    เริ่มต้นโดยการสร้างการจับคู่ใหม่ทางด้านซ้าย
+                  <div class="text-caption text-md-body-2 text-grey mt-2">
+                    เริ่มต้นโดยการสร้างการจับคู่ใหม่
                   </div>
                 </div>
               </template>
@@ -311,7 +311,6 @@
       </v-row>
     </v-container>
 
-    <!-- Snackbar -->
     <v-snackbar 
       v-model="snackbar" 
       :color="snackbarColor" 
@@ -591,4 +590,10 @@ onMounted(() => {
 :deep(.v-data-table__wrapper)::-webkit-scrollbar-thumb:hover {
   background-color: rgba(102, 126, 234, 0.5);
 }
+
+/* Helper utility for specific sizes if needed via CSS */
+.size-40 { width: 40px !important; height: 40px !important; }
+.size-48 { width: 48px !important; height: 48px !important; }
+.size-56 { width: 56px !important; height: 56px !important; }
+.size-80 { width: 80px !important; height: 80px !important; }
 </style>
